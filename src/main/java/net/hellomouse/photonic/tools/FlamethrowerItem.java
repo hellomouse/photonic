@@ -17,6 +17,10 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class FlamethrowerItem  extends Item {
+	public static final float FIRING_SPEED = 2.4f;
+	public static final float FIRING_RANDOMNESS = 0.1f; // In degrees, total range
+	public static final float SPEED_RANDOMNESS = 0.01f; // In m/s, total range
+
 	public FlamethrowerItem(Settings settings) {
 		super(settings);
 	}
@@ -34,16 +38,16 @@ public class FlamethrowerItem  extends Item {
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 2; i++) {
 			ProjectileEntity persistentProjectileEntity = new FlamethrowerProjectileEntity(player, 0, 1, 0, world);
 			persistentProjectileEntity.setOnFireFor(100);
 
-			float offset1 = (world.getRandom().nextFloat() - 0.5f) * 10.0f;
-			float offset2 = (world.getRandom().nextFloat() - 0.5f) * 10.0f;
-			float speedOffset = (world.getRandom().nextFloat() - 0.5f) * 0.5f;
+			float offset1 = (world.getRandom().nextFloat() - 0.5f) * FIRING_RANDOMNESS;
+			float offset2 = (world.getRandom().nextFloat() - 0.5f) * FIRING_RANDOMNESS;
+			float speedOffset = (world.getRandom().nextFloat() - 0.5f) * SPEED_RANDOMNESS;
 
 			// Modifier z is fire speed (1.7)
-			persistentProjectileEntity.setProperties(player, player.getPitch() + offset1, player.getYaw() + offset2, 0.0F, 1.7F + speedOffset, 1.0F);
+			persistentProjectileEntity.setProperties(player, player.getPitch() + offset1, player.getYaw() + offset2, 0.0F, FIRING_SPEED + speedOffset, 1.0F);
 			world.spawnEntity(persistentProjectileEntity);
 		}
 

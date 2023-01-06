@@ -14,6 +14,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
@@ -51,7 +52,7 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 	protected void onEntityHit(EntityHitResult entityHitResult) {
 		super.onEntityHit(entityHitResult);
 		float f = (float)this.getVelocity().length();
-		int i = MathHelper.ceil(MathHelper.clamp((double)f * 1, 0.0, 2.147483647E9));
+		int i = MathHelper.ceil(MathHelper.clamp((double)f * 4.0f, 0.0, 2.147483647E9));
 
 		Entity entity = entityHitResult.getEntity();
 		Entity owner = this.getOwner();
@@ -76,6 +77,11 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 		}
 	}
 
+	// So it doesn't set itself on fire and look weird
+	protected boolean isBurning() {
+		return false;
+	}
+
 	@Override
 	public void tick() {
 		Entity owner = this.getOwner();
@@ -90,7 +96,14 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 
 			// Create fire particles in same direction
 			Vec3d v = this.getVelocity().multiply(0.3);
-			world.addImportantParticle(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), v.getX(), v.getY(), v.getZ());
+			ParticleEffect particleEffect = ParticleTypes.LAVA;
+			int choice = world.getRandom().nextInt(10);
+			if (choice < 6)
+				particleEffect = ParticleTypes.FLAME;
+			else if (choice < 9)
+				particleEffect = ParticleTypes.LARGE_SMOKE;
+
+			world.addImportantParticle(particleEffect, this.getX(), this.getY(), this.getZ(), v.getX(), v.getY(), v.getZ());
 
 			HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
 			if (hitResult.getType() != HitResult.Type.MISS)
@@ -117,9 +130,7 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 	}
 
 	@Override
-	protected boolean canHit(Entity entity) {
-		return super.canHit(entity) && !entity.noClip;
-	}
+	public boolean doesRenderOnFire() { return false; }
 
 	@Override
 	public boolean collides() {
