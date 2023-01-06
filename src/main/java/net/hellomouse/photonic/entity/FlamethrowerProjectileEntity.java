@@ -1,9 +1,11 @@
 package net.hellomouse.photonic.entity;
 
 import net.hellomouse.photonic.registry.entity.ProjectileEntityRegistry;
+import net.hellomouse.photonic.registry.particle.ParticleRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -52,9 +54,14 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 	protected void onEntityHit(EntityHitResult entityHitResult) {
 		super.onEntityHit(entityHitResult);
 		float f = (float)this.getVelocity().length();
-		int i = MathHelper.ceil(MathHelper.clamp((double)f * 4.0f, 0.0, 2.147483647E9));
+		int i = MathHelper.ceil(MathHelper.clamp((double)f * 2.0f, 0.0, 2.147483647E9));
 
 		Entity entity = entityHitResult.getEntity();
+
+		// Don't insta kill items - leave chance for drop
+		if (entity instanceof ItemEntity && world.getRandom().nextInt(10) != 0)
+			return;
+
 		Entity owner = this.getOwner();
 		DamageSource damageSource = owner instanceof LivingEntity ? DamageSource.mob((LivingEntity)owner) : DamageSource.IN_FIRE;
 		entity.setOnFireFor(7);
@@ -70,16 +77,10 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 					((ServerPlayerEntity)owner).networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.PROJECTILE_HIT_PLAYER, 0.0F));
 			}
 		} else {
-			entity.setFireTicks(7 * 20);
 			this.setVelocity(this.getVelocity().multiply(-0.1));
 			this.setYaw(this.getYaw() + 180.0F);
 			this.prevYaw += 180.0F;
 		}
-	}
-
-	// So it doesn't set itself on fire and look weird
-	protected boolean isBurning() {
-		return false;
 	}
 
 	@Override
@@ -99,7 +100,7 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 			ParticleEffect particleEffect = ParticleTypes.LAVA;
 			int choice = world.getRandom().nextInt(10);
 			if (choice < 6)
-				particleEffect = ParticleTypes.FLAME;
+				particleEffect = ParticleRegistry.FLAMETHROWER_FLAME;
 			else if (choice < 9)
 				particleEffect = ParticleTypes.LARGE_SMOKE;
 
@@ -127,6 +128,12 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 		} else {
 			this.discard();
 		}
+	}
+
+	@Override
+	protected boolean canHit(Entity entity) {
+		if (!entity.isAlive() || entity.isSpectator() || entity instanceof FlamethrowerProjectileEntity) return false;
+		return entity.collides() || entity instanceof ItemEntity;
 	}
 
 	@Override

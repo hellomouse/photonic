@@ -46,7 +46,7 @@ public class FlamethrowerItem  extends Item {
 			float offset2 = (world.getRandom().nextFloat() - 0.5f) * FIRING_RANDOMNESS;
 			float speedOffset = (world.getRandom().nextFloat() - 0.5f) * SPEED_RANDOMNESS;
 
-			// Modifier z is fire speed (1.7)
+			// Modifier z is fire speed
 			persistentProjectileEntity.setProperties(player, player.getPitch() + offset1, player.getYaw() + offset2, 0.0F, FIRING_SPEED + speedOffset, 1.0F);
 			world.spawnEntity(persistentProjectileEntity);
 		}

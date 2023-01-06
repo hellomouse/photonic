@@ -2,6 +2,7 @@ package net.hellomouse.photonic;
 
 import net.hellomouse.photonic.registry.block.MachineBlockRegistry;
 import net.hellomouse.photonic.registry.item.ItemRegistry;
+import net.hellomouse.photonic.registry.particle.ParticleRegistry;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.slf4j.Logger;
@@ -18,5 +19,6 @@ public class Photonic implements ModInitializer {
 		LOGGER.info("Hello Quilt world from {}!", mod.metadata().name());
 		MachineBlockRegistry.register(mod);
 		ItemRegistry.register(mod);
+		ParticleRegistry.register(mod);
 	}
 }
