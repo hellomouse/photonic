@@ -1,5 +1,9 @@
 {
+	"itemGroup.photonic.item_group": "Photonic",
 	"item.photonic.carbon": "Carbon",
 	"item.photonic.silicon": "Silicon",
-	"item.photonic.steel_ingot": "Steel Ingot"
+	"item.photonic.steel_ingot": "Steel Ingot",
+	
+	"item.photonic.slime_finder": "Slime Divining Pendulum",
+	"item.photonic.slime_finder.tooltip": "Right click, will activate in a slime chunk"
 }
