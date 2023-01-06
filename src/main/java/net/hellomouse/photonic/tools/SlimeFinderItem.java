@@ -5,10 +5,8 @@ import net.hellomouse.photonic.util.Networking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.thrown.EnderPearlEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.random.RandomGenerator;
@@ -48,26 +47,26 @@ public class SlimeFinderItem extends Item {
 		playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
 
 		// Ignore if run client side as client doesn't have seed (and shouldn't)
-		if (world.isClient()) return super.use(world, playerEntity, hand);
+		if (!world.isClient()) {
+			Long seed = null;
+			if (world instanceof StructureWorldAccess && world.getRegistryKey() == World.OVERWORLD)
+				seed = ((StructureWorldAccess) world).getSeed();
+			if (seed != null) {
+				ChunkPos pos = playerEntity.getChunkPos();
+				// Found a slime chunk, tell the player
+				if (ChunkRandom.getSlimeRandom(pos.x, pos.z, seed, 987234911L).nextInt(10) == 0) {
+					// playerEntity.sendSystemMessage(Text.literal("Slime")); // Unimmersive
 
-		Long seed = null;
-		if (world instanceof StructureWorldAccess && world.getRegistryKey() == World.OVERWORLD)
-			seed = ((StructureWorldAccess) world).getSeed();
-		if (seed != null) {
-			ChunkPos pos = playerEntity.getChunkPos();
-			// Found a slime chunk, tell the player
-			if (ChunkRandom.getSlimeRandom(pos.x, pos.z, seed, 987234911L).nextInt(10) == 0) {
-				// playerEntity.sendSystemMessage(Text.literal("Slime")); // Unimmersive
+					PacketByteBuf buf = PacketByteBufs.create();
+					buf.writeBoolean(true);
+					ServerPlayNetworking.send((ServerPlayerEntity) playerEntity, Networking.SLIME_FINDER_PACKET_ID, buf);
 
-				PacketByteBuf buf = PacketByteBufs.create();
-				buf.writeBoolean(true);
-				ServerPlayNetworking.send((ServerPlayerEntity)playerEntity, Networking.SLIME_FINDER_PACKET_ID, buf);
-
-				Vec3d ppos = playerEntity.getPos();
-				world.playSound(null, ppos.x, ppos.y, ppos.z, SoundEvents.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1f, 1f);
+					Vec3d ppos = playerEntity.getPos();
+					world.playSound(null, ppos.x, ppos.y, ppos.z, SoundEvents.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.MASTER, 1f, 1f);
+				}
 			}
 		}
-		return TypedActionResult.success(playerEntity.getStackInHand(hand));
+		return TypedActionResult.consume(playerEntity.getStackInHand(hand));
 	}
 
 	public static void onClientWorld(MinecraftClient client, boolean isSlime) {
