@@ -2,9 +2,9 @@ package net.hellomouse.photonic.registry.item;
 
 import net.hellomouse.photonic.Photonic;
 import net.hellomouse.photonic.registry.block.MachineBlockRegistry;
+import net.hellomouse.photonic.tools.FlamethrowerItem;
 import net.hellomouse.photonic.tools.SlimeFinderItem;
 import net.hellomouse.photonic.util.Networking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -33,6 +33,7 @@ public class ItemRegistry {
 	// Tools
 	public static final Item SLIME_FINDER = new SlimeFinderItem(new QuiltItemSettings().maxCount(1));
 	public static final Item CHAINSAW = new Item(new QuiltItemSettings().maxCount(1));
+	public static final Item FLAMETHROWER = new FlamethrowerItem(new QuiltItemSettings().maxCount(1));
 
 	// Custom item group
 	private static final ItemGroup ITEM_GROUP = QuiltItemGroup.builder(new Identifier(Photonic.MOD_ID, "item_group"))
@@ -44,6 +45,7 @@ public class ItemRegistry {
 				// Tools
 				stacks.add(new ItemStack(SLIME_FINDER));
 				stacks.add(new ItemStack(CHAINSAW));
+				stacks.add(new ItemStack(FLAMETHROWER));
 
 				// Raw materials
 				stacks.add(new ItemStack(CARBON));
@@ -68,6 +70,7 @@ public class ItemRegistry {
 		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "hand_generator"), HAND_GENERATOR_ITEM);
 		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "slime_finder"), SLIME_FINDER);
 		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "chainsaw"), CHAINSAW);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "flamethrower"), FLAMETHROWER);
 	}
 
 	public static void registerClient(ModContainer mod) {

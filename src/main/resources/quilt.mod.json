@@ -21,8 +21,14 @@
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
-			"init": "net.hellomouse.photonic.Photonic",
-			"client_init": "net.hellomouse.photonic.PhotonicClient"
+			"init": [
+				"net.hellomouse.photonic.Photonic",
+				"net.hellomouse.photonic.registry.entity.ProjectileEntityRegistry"
+			],
+			"client_init": [
+				"net.hellomouse.photonic.PhotonicClient",
+				"net.hellomouse.photonic.registry.entity.ProjectileEntityRegistryClient"
+			]
 		},
 		"depends": [
 			{
