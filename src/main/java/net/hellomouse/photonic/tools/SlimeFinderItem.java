@@ -5,13 +5,16 @@ import net.hellomouse.photonic.util.Networking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.thrown.EnderPearlEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -36,11 +39,14 @@ public class SlimeFinderItem extends Item {
 	@Override
 	public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
 		tooltip.add(Text.translatable("item." + Photonic.MOD_ID + ".slime_finder.tooltip")
-				.formatted(Formatting.ITALIC, Formatting.GRAY));
+				.formatted(Formatting.GRAY));
 	}
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+		playerEntity.getItemCooldownManager().set(this, 5);
+		playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+
 		// Ignore if run client side as client doesn't have seed (and shouldn't)
 		if (world.isClient()) return super.use(world, playerEntity, hand);
 

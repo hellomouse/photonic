@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#",
+        "H",
+        "B"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:string"
+        },
+        "H": {
+            "item": "minecraft:honey_bottle"
+        },
+        "B": {
+            "item": "minecraft:bell"
+        }
+    },
+    "result": {
+        "item": "photonic:slime_finder",
+        "count": 1
+    },
+    "group": "photonic"
+}
