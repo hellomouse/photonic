@@ -3,10 +3,7 @@ package net.hellomouse.photonic.entity;
 import net.hellomouse.photonic.registry.entity.ProjectileEntityRegistry;
 import net.hellomouse.photonic.registry.particle.ParticleRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -58,8 +55,8 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 
 		Entity entity = entityHitResult.getEntity();
 
-		// Don't insta kill items - leave chance for drop
-		if (entity instanceof ItemEntity && world.getRandom().nextInt(10) != 0)
+		// Don't insta kill items and XP - leave chance for drop
+		if ((entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity) && world.getRandom().nextInt(10) != 0)
 			return;
 
 		Entity owner = this.getOwner();
@@ -101,10 +98,18 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 			int choice = world.getRandom().nextInt(10);
 			if (choice < 6)
 				particleEffect = ParticleRegistry.FLAMETHROWER_FLAME;
-			else if (choice < 9)
+			else if (choice <= 9)
 				particleEffect = ParticleTypes.LARGE_SMOKE;
 
-			world.addImportantParticle(particleEffect, this.getX(), this.getY(), this.getZ(), v.getX(), v.getY(), v.getZ());
+			// Spawn more particle density
+			for (int i = 0; i < 4; i++) {
+				final float STEP = 0.4f;
+				world.addImportantParticle(particleEffect,
+						this.getX() + v.getX() * i * STEP,
+						this.getY() + v.getY() * i * STEP,
+						this.getZ() + v.getZ() * i * STEP,
+						v.getX(), v.getY(), v.getZ());
+			}
 
 			HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
 			if (hitResult.getType() != HitResult.Type.MISS)
@@ -133,7 +138,7 @@ public class FlamethrowerProjectileEntity extends ProjectileEntity {
 	@Override
 	protected boolean canHit(Entity entity) {
 		if (!entity.isAlive() || entity.isSpectator() || entity instanceof FlamethrowerProjectileEntity) return false;
-		return entity.collides() || entity instanceof ItemEntity;
+		return entity.collides() || entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity;
 	}
 
 	@Override

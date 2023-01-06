@@ -17,7 +17,7 @@ public class ProjectileEntityRegistry implements ModInitializer {
 			new Identifier(Photonic.MOD_ID, "flamethrower_projectile"),
 			QuiltEntityTypeBuilder.<FlamethrowerProjectileEntity>create(SpawnGroup.MISC, FlamethrowerProjectileEntity::new)
 					.setDimensions(EntityDimensions.fixed(0.5F, 0.5F))
-					.trackingTickInterval(10).maxBlockTrackingRange(32)
+					.trackingTickInterval(10).maxBlockTrackingRange(64)
 					.build());
 
 	@Override

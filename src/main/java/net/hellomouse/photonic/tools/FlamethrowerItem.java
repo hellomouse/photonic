@@ -39,16 +39,17 @@ public class FlamethrowerItem  extends Item {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 		for (int i = 0; i < 2; i++) {
-			ProjectileEntity persistentProjectileEntity = new FlamethrowerProjectileEntity(player, 0, 1, 0, world);
-			persistentProjectileEntity.setOnFireFor(100);
+			ProjectileEntity fireProjectile = new FlamethrowerProjectileEntity(player, 0, 1, 0, world);
+			fireProjectile.setOnFireFor(100);
 
 			float offset1 = (world.getRandom().nextFloat() - 0.5f) * FIRING_RANDOMNESS;
 			float offset2 = (world.getRandom().nextFloat() - 0.5f) * FIRING_RANDOMNESS;
 			float speedOffset = (world.getRandom().nextFloat() - 0.5f) * SPEED_RANDOMNESS;
 
 			// Modifier z is fire speed
-			persistentProjectileEntity.setProperties(player, player.getPitch() + offset1, player.getYaw() + offset2, 0.0F, FIRING_SPEED + speedOffset, 1.0F);
-			world.spawnEntity(persistentProjectileEntity);
+			fireProjectile.setProperties(player, player.getPitch() + offset1, player.getYaw() + offset2, 0.0F, FIRING_SPEED + speedOffset, 1.0F);
+			fireProjectile.setPosition(fireProjectile.getPos().add(fireProjectile.getVelocity().multiply(i)));
+			world.spawnEntity(fireProjectile);
 		}
 
 		return TypedActionResult.pass(player.getStackInHand(hand));
