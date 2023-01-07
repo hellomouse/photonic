@@ -2,6 +2,7 @@ package net.hellomouse.photonic.registry.item;
 
 import net.hellomouse.photonic.Photonic;
 import net.hellomouse.photonic.registry.block.MachineBlockRegistry;
+import net.hellomouse.photonic.tools.ChainsawItem;
 import net.hellomouse.photonic.tools.FlamethrowerItem;
 import net.hellomouse.photonic.tools.SlimeFinderItem;
 import net.hellomouse.photonic.util.Networking;
@@ -32,7 +33,7 @@ public class ItemRegistry {
 
 	// Tools
 	public static final Item SLIME_FINDER = new SlimeFinderItem(new QuiltItemSettings().maxCount(1));
-	public static final Item CHAINSAW = new Item(new QuiltItemSettings().maxCount(1));
+	public static final Item CHAINSAW = new ChainsawItem(new QuiltItemSettings().maxCount(1));
 	public static final Item FLAMETHROWER = new FlamethrowerItem(new QuiltItemSettings().maxCount(1));
 
 	// Custom item group
