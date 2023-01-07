@@ -5,6 +5,7 @@ import net.hellomouse.photonic.tools.powered.PoweredToolConfig;
 import net.hellomouse.photonic.util.Floodfill;
 import net.hellomouse.photonic.util.Util;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,8 +15,8 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -31,21 +32,22 @@ public class ChainsawItem extends AbstractPoweredTool {
 				.energyStorage(4000, 1000, 1000));
 	}
 
-
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-
+		// Prevent swinging if mining a block
+		if (selected && entity instanceof LivingEntity) {
+			if (entity.raycast(5.0f, 0.0f, false).getType() == HitResult.Type.BLOCK)
+				((LivingEntity) entity).handSwinging = false;
+		}
 	}
 
 	@Override
 	public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
 		if (world.isClient) return false;
 		if (!(miner instanceof PlayerEntity player)) return false;
-		if (!player.canModifyBlocks())
+		if (!player.canModifyBlocks() || player.isSneaking())
 			return false;
-
-		// TODO: shift to not flood
-
+		
 		// Perform floodfill and find connected logs
 		ArrayList<BlockPos> logs = Floodfill.floodfill((ServerWorld)world, pos, Math.min(5000, this.getStoredEnergy(stack) / this.config.getEnergyCostToMine()), 200, true,
 			pair -> {
@@ -76,15 +78,18 @@ public class ChainsawItem extends AbstractPoweredTool {
 
 	@Override
 	public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
-		// Slower for non-axe or leaves
+		// Slower for non-axe or leaves or cobwebs or bamboo
 		boolean powered = this.getStoredEnergy(stack) > 0;
-		if (!state.isIn(BlockTags.AXE_MINEABLE) && !state.isIn(BlockTags.LEAVES)) return powered ? 1.0f : 0.5f;
+		if (state.isOf(Blocks.COBWEB) || state.isOf(Blocks.BAMBOO))
+			return powered ? 64.0f : this.config.getMiningSpeedUnpowered(); // Faster since not proper tool
+		if (!state.isIn(BlockTags.AXE_MINEABLE) && !state.isIn(BlockTags.LEAVES))
+			return powered ? 1.0f : 0.5f;
 		return powered ? this.config.getMiningSpeedPowered() : this.config.getMiningSpeedUnpowered();
 	}
 
 	@Override
 	public boolean isSuitableFor(BlockState state) {
-		return state.isIn(BlockTags.LOGS);
+		return state.isIn(BlockTags.AXE_MINEABLE);
 	}
 
 	@Override

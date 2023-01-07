@@ -38,7 +38,7 @@ public class Floodfill {
 		maxDistance = (maxDistance < 0 ? -1 : 1) * maxDistance * maxDistance; // We work in squared distances
 
 		while (!toVisit.isEmpty() && foundCount < limit) {
-			BlockPos here = toVisit.remove(0);
+			BlockPos here = toVisit.pop();
 			if (visited.contains(here))
 				continue;
 
@@ -48,11 +48,15 @@ public class Floodfill {
 			visited.add(here);
 
 			if (foundCount == 0 || valid) {
-				if (valid) blocks.add(here);
-				foundCount++;
+				if (valid) {
+					blocks.add(here);
+					foundCount++;
+				}
 
 				// Also add neighbors to queue
 				BlockPos[] blockPositions = new BlockPos[] {here.up(), here.down(), here};
+				toVisit.add(here.up());
+				toVisit.add(here.down());
 
 				if (allowDiagonal) {
 					for (BlockPos blockPos : blockPositions) {
