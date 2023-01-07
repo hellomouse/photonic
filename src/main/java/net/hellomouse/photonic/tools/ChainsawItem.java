@@ -47,7 +47,7 @@ public class ChainsawItem extends AbstractPoweredTool {
 		if (!(miner instanceof PlayerEntity player)) return false;
 		if (!player.canModifyBlocks() || player.isSneaking())
 			return false;
-		
+
 		// Perform floodfill and find connected logs
 		ArrayList<BlockPos> logs = Floodfill.floodfill((ServerWorld)world, pos, Math.min(5000, this.getStoredEnergy(stack) / this.config.getEnergyCostToMine()), 200, true,
 			pair -> {
@@ -61,8 +61,7 @@ public class ChainsawItem extends AbstractPoweredTool {
 
 		// Break all the logs
 		this.tryUseEnergy(stack, (long)logs.size() * this.config.getEnergyCostToMine());
-
-		for (BlockPos p : logs)
+		for (BlockPos p: logs)
 			world.breakBlock(p, player.canHarvest(world.getBlockState(p)), miner);
 		return true; // Return whether used
 	}
@@ -72,7 +71,7 @@ public class ChainsawItem extends AbstractPoweredTool {
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		// this.tryUseEnergy(ItemStack stack, long amount);
 		this.setStoredEnergy(user.getStackInHand(hand), 4000);
-		user.sendSystemMessage(Text.literal("Energty " + this.getStoredEnergy(user.getStackInHand(hand)) + "/" + this.capacity ));
+		user.sendSystemMessage(Text.literal("Energy " + this.getStoredEnergy(user.getStackInHand(hand)) + "/" + this.capacity ));
 		return TypedActionResult.pass(user.getStackInHand(hand));
 	}
 

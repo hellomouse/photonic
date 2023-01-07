@@ -47,7 +47,7 @@ public class Floodfill {
 			boolean valid = filter.test(new Pair<>(blockState, here)) && distance <= maxDistance;
 			visited.add(here);
 
-			if (foundCount == 0 || valid) {
+			if (here.equals(start) || valid) {
 				if (valid) {
 					blocks.add(here);
 					foundCount++;
