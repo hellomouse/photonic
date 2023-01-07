@@ -48,6 +48,8 @@ public class ChainsawItem extends AbstractPoweredTool {
 		if (!player.canModifyBlocks() || player.isSneaking())
 			return false;
 
+		// TODO: limit horizontal distance? prevent accidentally deleting ur base lol
+
 		// Perform floodfill and find connected logs
 		ArrayList<BlockPos> logs = Floodfill.floodfill((ServerWorld)world, pos, Math.min(5000, this.getStoredEnergy(stack) / this.config.getEnergyCostToMine()), 200, true,
 			pair -> {

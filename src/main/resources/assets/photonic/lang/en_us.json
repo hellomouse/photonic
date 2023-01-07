@@ -5,5 +5,7 @@
 	"item.photonic.steel_ingot": "Steel Ingot",
 	
 	"item.photonic.slime_finder": "Slime Divining Pendulum",
-	"item.photonic.slime_finder.tooltip": "Right click, will activate in a slime chunk"
+	"item.photonic.slime_finder.tooltip": "Right click, will activate in a slime chunk",
+	
+	"item.photonic.chainsaw": "Chainsaw"
 }
