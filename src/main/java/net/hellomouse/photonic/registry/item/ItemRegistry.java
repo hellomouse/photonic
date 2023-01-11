@@ -1,7 +1,7 @@
 package net.hellomouse.photonic.registry.item;
 
 import net.hellomouse.photonic.Photonic;
-import net.hellomouse.photonic.registry.block.MachineBlockRegistry;
+import net.hellomouse.photonic.block.MachineBlockRegistry;
 import net.hellomouse.photonic.tools.ChainsawItem;
 import net.hellomouse.photonic.tools.FlamethrowerItem;
 import net.hellomouse.photonic.tools.SlimeFinderItem;

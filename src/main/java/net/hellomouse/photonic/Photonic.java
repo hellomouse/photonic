@@ -1,6 +1,6 @@
 package net.hellomouse.photonic;
 
-import net.hellomouse.photonic.registry.block.MachineBlockRegistry;
+import net.hellomouse.photonic.block.MachineBlockRegistry;
 import net.hellomouse.photonic.registry.item.ItemRegistry;
 import net.hellomouse.photonic.registry.particle.ParticleRegistry;
 import org.quiltmc.loader.api.ModContainer;
