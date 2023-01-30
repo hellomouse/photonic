@@ -7,5 +7,12 @@
 	"item.photonic.slime_finder": "Slime Divining Pendulum",
 	"item.photonic.slime_finder.tooltip": "Right click, will activate in a slime chunk",
 	
-	"item.photonic.chainsaw": "Chainsaw"
+	"item.photonic.flamethrower": "Flamethrower",
+	
+	"item.photonic.chainsaw": "Chainsaw",
+	
+	"item.photonic.basic_circuit": "Basic Circuit",
+	"item.photonic.advanced_circuit": "Advanced Circuit",
+	"item.photonic.elite_circuit": "Elite Circuit",
+	"item.photonic.ultimate_circuit": "Ultimate Circuit"
 }

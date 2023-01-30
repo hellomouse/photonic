@@ -10,6 +10,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
@@ -36,6 +37,14 @@ public class ItemRegistry {
 	public static final Item CHAINSAW = new ChainsawItem(new QuiltItemSettings().maxCount(1));
 	public static final Item FLAMETHROWER = new FlamethrowerItem(new QuiltItemSettings().maxCount(1));
 
+	// Alloys
+
+	// Circuits
+	public static final Item BASIC_CIRCUIT = new Item(new QuiltItemSettings().maxCount(64));
+	public static final Item ADVANCED_CIRCUIT = new Item(new QuiltItemSettings().maxCount(64).rarity(Rarity.UNCOMMON));
+	public static final Item ELITE_CIRCUIT = new Item(new QuiltItemSettings().maxCount(64).rarity(Rarity.RARE));
+	public static final Item ULTIMATE_CIRCUIT = new Item(new QuiltItemSettings().maxCount(64).rarity(Rarity.EPIC));
+
 	// Custom item group
 	private static final ItemGroup ITEM_GROUP = QuiltItemGroup.builder(new Identifier(Photonic.MOD_ID, "item_group"))
 			.icon(() -> new ItemStack(STEEL_INGOT))
@@ -60,6 +69,14 @@ public class ItemRegistry {
 
 				// Machines
 				stacks.add(new ItemStack(HAND_GENERATOR_ITEM));
+
+				// Alloys
+
+				// Circuits
+				stacks.add(new ItemStack(BASIC_CIRCUIT));
+				stacks.add(new ItemStack(ADVANCED_CIRCUIT));
+				stacks.add(new ItemStack(ELITE_CIRCUIT));
+				stacks.add(new ItemStack(ULTIMATE_CIRCUIT));
 			})
 			.build();
 
@@ -72,6 +89,11 @@ public class ItemRegistry {
 		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "slime_finder"), SLIME_FINDER);
 		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "chainsaw"), CHAINSAW);
 		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "flamethrower"), FLAMETHROWER);
+
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "basic_circuit"), BASIC_CIRCUIT);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "advanced_circuit"), ADVANCED_CIRCUIT);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "elite_circuit"), ELITE_CIRCUIT);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "ultimate_circuit"), ULTIMATE_CIRCUIT);
 	}
 
 	public static void registerClient(ModContainer mod) {
