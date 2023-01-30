@@ -27,7 +27,7 @@ public class ItemRegistry {
 	public static final Item SILICON = new Item(new QuiltItemSettings().maxCount(64));
 
 	// Machine parts
-	public static final Item MECHANICAL_CASING = new Item(new QuiltItemSettings().maxCount(64));
+	public static final Item MECHANICAL_CASING = new BlockItem(MachineBlockRegistry.MECHANICAL_CASING, new QuiltItemSettings().maxCount(64));
 
 	// Machines
 	public static final Item HAND_GENERATOR_ITEM = new BlockItem(MachineBlockRegistry.HAND_GENERATOR, new QuiltItemSettings().maxCount(64));
